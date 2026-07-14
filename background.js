@@ -1,49 +1,71 @@
 // The oracle fetches data from a decentralized source (Arweave/IPFS).
-// Currently pointing to our GitHub-hosted fallback oracle until the Arweave smart contract is deployed.
 const STATUS_ORACLE_URL = "https://raw.githubusercontent.com/web3vero/immutable-mitch/main/oracle.json";
 
-async function checkMcConnellStatus() {
-  try {
-    // 1. Fetch the status from the decentralized web
-    const response = await fetch(STATUS_ORACLE_URL);
-    const statusData = await response.json();
+let animationInterval = null;
+let currentFrame = 0;
 
-    // Status data is expected to be in a Verifiable Credential (VC) format.
-    // Example: { "status": "alive", "timestamp": "...", "source": "..." }
-    const status = statusData.status.toLowerCase();
+// Uses OffscreenCanvas to procedurally generate and animate the extension icon!
+function setAnimatedIcon(status) {
+  if (animationInterval) clearInterval(animationInterval);
+  
+  const canvas = new OffscreenCanvas(16, 16);
+  const ctx = canvas.getContext('2d');
+  
+  function drawEmoji(emoji, angle, yOffset) {
+    ctx.clearRect(0, 0, 16, 16);
+    ctx.save();
+    ctx.translate(8, 8 + yOffset);
+    ctx.rotate(angle * Math.PI / 180);
+    ctx.font = '14px Arial';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(emoji, 0, 0);
+    ctx.restore();
+    chrome.action.setIcon({ imageData: ctx.getImageData(0, 0, 16, 16) });
+  }
 
-    // 2. Update the extension icon and tooltip based on the status
-    if (status.includes("dead") || status.includes("deceased")) {
-      chrome.action.setIcon({ path: "icon_dead.png" });
-      chrome.action.setTitle({ title: "Status: Deceased (Decentralized Oracle Confirmed)" });
-    } else if (status.includes("alive") || status.includes("recovering")) {
-      chrome.action.setIcon({ path: "icon_alive.png" });
-      chrome.action.setTitle({ title: "Status: Recovering / Alive (Decentralized Oracle Confirmed)" });
-    } else {
-      chrome.action.setIcon({ path: "icon_unknown.png" });
-      chrome.action.setTitle({ title: "Status: Unknown (Oracle Data Pending)" });
-    }
-
-    // 3. Save the data for the popup
-    chrome.storage.local.set({ mcconnellStatus: statusData });
-
-  } catch (error) {
-    console.error("Could not fetch status from decentralized oracle:", error);
-    chrome.action.setIcon({ path: "icon_unknown.png" });
-    chrome.action.setTitle({ title: "Error: Oracle Unavailable" });
+  if (status.includes("alive") || status.includes("recovering")) {
+    chrome.action.setTitle({ title: "Status: Recovering / Alive (Oracle Confirmed)" });
+    // Animate a dancing/bobbing turtle!
+    animationInterval = setInterval(() => {
+      const angle = currentFrame % 2 === 0 ? -15 : 15;
+      const yOff = currentFrame % 2 === 0 ? -1 : 1;
+      drawEmoji('🐢', angle, yOff);
+      currentFrame++;
+    }, 400);
+  } else if (status.includes("dead") || status.includes("deceased")) {
+    chrome.action.setTitle({ title: "Status: Deceased (Oracle Confirmed)" });
+    // Static skull
+    drawEmoji('💀', 0, 0);
+  } else {
+    chrome.action.setTitle({ title: "Status: Unknown (Data Pending)" });
+    // Flash a question mark and a turtle
+    animationInterval = setInterval(() => {
+      drawEmoji(currentFrame % 2 === 0 ? '🐢' : '❓', 0, 0);
+      currentFrame++;
+    }, 800);
   }
 }
 
-// Set up an alarm to check every hour (Web3 data is typically updated less frequently)
-chrome.alarms.create("checkMcConnell", { periodInMinutes: 60 });
+async function checkMcConnellStatus() {
+  try {
+    const response = await fetch(STATUS_ORACLE_URL);
+    const statusData = await response.json();
+    const status = statusData.status.toLowerCase();
 
-chrome.alarms.onAlarm.addListener((alarm) => {
-  if (alarm.name === "checkMcConnell") {
-    checkMcConnellStatus();
+    setAnimatedIcon(status);
+    chrome.storage.local.set({ mcconnellStatus: statusData });
+  } catch (error) {
+    console.error("Oracle fetch failed:", error);
+    setAnimatedIcon("unknown");
   }
+}
+
+chrome.alarms.create("checkMcConnell", { periodInMinutes: 60 });
+chrome.alarms.onAlarm.addListener((alarm) => {
+  if (alarm.name === "checkMcConnell") checkMcConnellStatus();
 });
 
-// Run immediately on installation
 chrome.runtime.onInstalled.addListener(() => {
   checkMcConnellStatus();
 });
