@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "Mitch McConnell Status Tracker",
+  "version": "1.0",
+  "description": "Tracks the latest status of Senator Mitch McConnell using decentralized Web3 tech.",
+  "permissions": ["alarms", "storage"],
+  "host_permissions": [
+    "https://arweave.net/*",
+    "https://ipfs.io/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_icon": "ext_icon.jpg",
+    "default_popup": "popup.html"
+  }
+}

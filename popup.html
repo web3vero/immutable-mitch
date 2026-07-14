@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    :root {
+      --neon-cyan: #0ff;
+      --neon-purple: #b537f2;
+      --neon-red: #ff003c;
+      --neon-green: #00ff66;
+      --bg-dark: #090a0f;
+      --glass-bg: rgba(255, 255, 255, 0.05);
+      --glass-border: rgba(255, 255, 255, 0.1);
+    }
+    
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600&display=swap');
+
+    body { 
+      width: 320px; 
+      margin: 0;
+      padding: 0;
+      text-align: center; 
+      font-family: 'Rajdhani', sans-serif; 
+      background-color: var(--bg-dark);
+      color: #fff;
+      overflow: hidden;
+      background-image: 
+        radial-gradient(circle at 15% 50%, rgba(0, 255, 255, 0.08), transparent 25%),
+        radial-gradient(circle at 85% 30%, rgba(181, 55, 242, 0.08), transparent 25%);
+    }
+
+    .container {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px var(--neon-cyan);
+    }
+
+    h2 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.1rem;
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-shadow: 0 0 5px var(--neon-cyan);
+      color: var(--neon-cyan);
+    }
+
+    .glass-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 15px;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .status-container {
+      position: relative;
+    }
+
+    .status-label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      color: #aaa;
+      margin-bottom: 5px;
+      letter-spacing: 2px;
+    }
+
+    .status { 
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700; 
+      font-size: 1.5rem; 
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+    }
+
+    .status.deceased {
+      color: var(--neon-red);
+      text-shadow: 0 0 10px var(--neon-red), 0 0 20px var(--neon-red);
+    }
+
+    .status.alive {
+      color: var(--neon-green);
+      text-shadow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-green);
+    }
+
+    .status.unknown {
+      color: var(--neon-cyan);
+      text-shadow: 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan);
+    }
+
+    .source { 
+      font-size: 0.75rem; 
+      color: #777; 
+      margin-top: 8px; 
+    }
+
+    .tip-jar {
+      margin-top: 5px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .tip-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--neon-purple);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+
+    .tip-title::before, .tip-title::after {
+      content: '';
+      width: 20px;
+      height: 1px;
+      background: var(--neon-purple);
+      box-shadow: 0 0 5px var(--neon-purple);
+    }
+
+    .address-box {
+      display: flex;
+      align-items: center;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--neon-purple);
+      border-radius: 6px;
+      padding: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .address-box:hover {
+      background: rgba(181, 55, 242, 0.1);
+      box-shadow: 0 0 10px rgba(181, 55, 242, 0.3);
+    }
+
+    .address-text {
+      font-family: monospace;
+      font-size: 0.7rem;
+      color: #ddd;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex-grow: 1;
+      text-align: left;
+    }
+
+    .copy-icon {
+      margin-left: 8px;
+      fill: var(--neon-purple);
+      width: 14px;
+      height: 14px;
+    }
+
+    #copy-notification {
+      position: absolute;
+      top: -25px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--neon-purple);
+      color: #fff;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: bold;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      pointer-events: none;
+    }
+
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.7; }
+      100% { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <img src="ext_icon.jpg" class="icon" alt="Oracle Icon">
+      <h2>Mitch Oracle</h2>
+    </div>
+
+    <div class="glass-card status-container">
+      <div class="status-label">Current Status</div>
+      <div class="status unknown pulse" id="status-text">SYNCING...</div>
+      <div class="source" id="source-text">Querying Decentralized Nodes</div>
+    </div>
+
+    <div class="glass-card tip-jar">
+      <div class="tip-title">Support the Oracle</div>
+      <div class="address-box" id="copy-btn">
+        <span id="copy-notification">COPIED!</span>
+        <span class="address-text" id="eth-address">0x11eb37959987acc6854ba0167ef8b06c559fe2f1</span>
+        <svg class="copy-icon" viewBox="0 0 24 24">
+          <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
