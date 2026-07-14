@@ -10,7 +10,7 @@ function setAnimatedIcon(status) {
   
   const canvas = new OffscreenCanvas(16, 16);
   const ctx = canvas.getContext('2d');
-  
+
   function drawEmoji(emoji, angle, yOffset) {
     ctx.clearRect(0, 0, 16, 16);
     ctx.save();
@@ -23,14 +23,53 @@ function setAnimatedIcon(status) {
     ctx.restore();
     chrome.action.setIcon({ imageData: ctx.getImageData(0, 0, 16, 16) });
   }
+  
+  function drawTurtle(headOut, angle, yOffset) {
+    ctx.clearRect(0, 0, 16, 16);
+    ctx.save();
+    ctx.translate(8, 8 + yOffset);
+    ctx.rotate(angle * Math.PI / 180);
+    ctx.translate(-8, -8);
+
+    // Legs
+    ctx.fillStyle = '#1b5e20';
+    ctx.fillRect(3, 11, 2, 3);
+    ctx.fillRect(9, 11, 2, 3);
+
+    // Shell
+    ctx.fillStyle = '#4CAF50';
+    ctx.beginPath();
+    ctx.arc(7, 10, 5, Math.PI, 0);
+    ctx.fill();
+    ctx.fillRect(2, 10, 10, 2);
+
+    // Shell pattern
+    ctx.fillStyle = '#2E7D32';
+    ctx.fillRect(5, 6, 4, 3);
+
+    if (headOut) {
+        // Head sticking out
+        ctx.fillStyle = '#8BC34A';
+        ctx.beginPath();
+        ctx.arc(13, 9, 2.5, 0, Math.PI*2);
+        ctx.fill();
+        
+        // Eye
+        ctx.fillStyle = 'black';
+        ctx.fillRect(13.5, 7.5, 1, 1);
+    }
+    
+    ctx.restore();
+    chrome.action.setIcon({ imageData: ctx.getImageData(0, 0, 16, 16) });
+  }
 
   if (status.includes("alive") || status.includes("recovering")) {
     chrome.action.setTitle({ title: "Status: Recovering / Alive (Oracle Confirmed)" });
-    // Animate a dancing/bobbing turtle!
+    // Animate a dancing/bobbing turtle with head OUT!
     animationInterval = setInterval(() => {
-      const angle = currentFrame % 2 === 0 ? -15 : 15;
+      const angle = currentFrame % 2 === 0 ? -10 : 10;
       const yOff = currentFrame % 2 === 0 ? -1 : 1;
-      drawEmoji('🐢', angle, yOff);
+      drawTurtle(true, angle, yOff);
       currentFrame++;
     }, 400);
   } else if (status.includes("dead") || status.includes("deceased")) {
@@ -39,11 +78,8 @@ function setAnimatedIcon(status) {
     drawEmoji('💀', 0, 0);
   } else {
     chrome.action.setTitle({ title: "Status: Unknown (Data Pending)" });
-    // Flash a question mark and a turtle
-    animationInterval = setInterval(() => {
-      drawEmoji(currentFrame % 2 === 0 ? '🐢' : '❓', 0, 0);
-      currentFrame++;
-    }, 800);
+    // Static turtle with head tucked safely INSIDE the shell
+    drawTurtle(false, 0, 0);
   }
 }
 
