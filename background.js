@@ -33,30 +33,44 @@ function setAnimatedIcon(status) {
 
     // Legs
     ctx.fillStyle = '#1b5e20';
-    ctx.fillRect(3, 11, 2, 3);
-    ctx.fillRect(9, 11, 2, 3);
+    ctx.fillRect(2, 11, 2, 3);
+    ctx.fillRect(8, 11, 2, 3);
 
     // Shell
     ctx.fillStyle = '#4CAF50';
     ctx.beginPath();
-    ctx.arc(7, 10, 5, Math.PI, 0);
+    ctx.arc(6, 10, 5, Math.PI, 0);
     ctx.fill();
-    ctx.fillRect(2, 10, 10, 2);
+    ctx.fillRect(1, 10, 10, 2);
 
     // Shell pattern
     ctx.fillStyle = '#2E7D32';
-    ctx.fillRect(5, 6, 4, 3);
+    ctx.fillRect(4, 6, 4, 3);
 
     if (headOut) {
-        // Head sticking out
+        // Greatly extended neck
         ctx.fillStyle = '#8BC34A';
+        ctx.fillRect(10, 4, 2, 6);
+
+        // Head 
         ctx.beginPath();
-        ctx.arc(13, 9, 2.5, 0, Math.PI*2);
+        ctx.arc(11, 4, 2.5, 0, Math.PI*2);
         ctx.fill();
         
         // Eye
         ctx.fillStyle = 'black';
-        ctx.fillRect(13.5, 7.5, 1, 1);
+        ctx.fillRect(12, 3, 1, 1);
+
+        // Red baseball cap
+        ctx.fillStyle = 'red';
+        ctx.beginPath();
+        ctx.arc(11, 2.5, 2.5, Math.PI, 0); // Hat dome
+        ctx.fill();
+        ctx.fillRect(11, 2, 4, 1); // Hat brim
+
+        // Gold dot on the front of the hat
+        ctx.fillStyle = 'gold';
+        ctx.fillRect(12, 1, 1.5, 1);
     }
     
     ctx.restore();
