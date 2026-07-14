@@ -1,0 +1,26 @@
+{
+  "name": "mcconnell-tracker",
+  "version": "1.0.0",
+  "description": "```text =========================================================    ___                                                      |_ _|  _ __ ___    _ __ ___   _   _  | |_   __ _           | |  | '_ \\` _ \\  | '_ \\` _ \\ | | | | | __| / _\\` |          | |  | | | | | | | | | | | || |_| | | |_ | (_| |         |___| |_| |_| |_| |_| |_| |_| \\__,_|  \\__| \\__,_|         __  __   _   _            _                              |  \\/  | (_) | |_    ___  | |__                           | |\\/| | | | | __|  / __| | '_ \\                          | |  | | | | | |_  | (__  | | | |                         |_|  |_| |_|  \\__|  \\___| |_| |_|",
+  "main": "background.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Foleymon/immutable-mitch.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Foleymon/immutable-mitch/issues"
+  },
+  "homepage": "https://github.com/Foleymon/immutable-mitch#readme",
+  "dependencies": {
+    "arweave": "^1.15.7",
+    "axios": "^1.18.1",
+    "fast-xml-parser": "^5.10.0",
+    "warp-contracts": "^1.4.45"
+  }
+}
