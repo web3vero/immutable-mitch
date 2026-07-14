@@ -1,6 +1,6 @@
 // The oracle fetches data from a decentralized source (Arweave/IPFS).
-// This URL points to a transaction or pinned file that is updated by a trusted oracle.
-const STATUS_ORACLE_URL = "https://arweave.net/STATUS_TRANSACTION_ID"; // Replace with actual ID
+// Currently pointing to our GitHub-hosted fallback oracle until the Arweave smart contract is deployed.
+const STATUS_ORACLE_URL = "https://raw.githubusercontent.com/web3vero/immutable-mitch/main/oracle.json";
 
 async function checkMcConnellStatus() {
   try {
