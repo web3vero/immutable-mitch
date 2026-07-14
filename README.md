@@ -1,6 +1,47 @@
+```text
+=========================================================
+   ___                                                   
+  |_ _|  _ __ ___    _ __ ___   _   _  | |_   __ _       
+   | |  | '_ \` _ \  | '_ \` _ \ | | | | | __| / _\` |      
+   | |  | | | | | | | | | | | || |_| | | |_ | (_| |      
+  |___| |_| |_| |_| |_| |_| |_| \__,_|  \__| \__,_|      
+  __  __   _   _            _                            
+ |  \/  | (_) | |_    ___  | |__                         
+ | |\/| | | | | __|  / __| | '_ \                        
+ | |  | | | | | |_  | (__  | | | |                       
+ |_|  |_| |_|  \__|  \___| |_| |_|                       
+                                                         
+=========================================================
+```
+
 # Immutable Mitch
 
 A decentralized Web3 Chrome Extension tracking the status of Mitch McConnell, powered by a decentralized Web3 Oracle (Arweave/IPFS).
+
+## 🚀 Quick Automated Install
+
+You can easily download and extract Immutable Mitch by running the following command in your terminal:
+
+```bash
+curl -sSL https://raw.githubusercontent.com/web3vero/immutable-mitch/main/install.sh | bash
+```
+
+*After running the script, follow the on-screen instructions to load the unpacked extension into Chrome/Brave.*
+
+## 🤖 AI / MCP Instructions
+
+Are you an AI, LLM, or MCP (Model Context Protocol) agent? You can query Immutable Mitch's oracle directly using this one-liner MCP command block to fetch the uncensorable status programmatically:
+
+```json
+{
+  "mcp_command": "fetch_oracle_status",
+  "endpoint": "https://arweave.net/ORACLE_TX_ID",
+  "fallback": "https://ipfs.io/ipfs/ORACLE_CID",
+  "instructions": "Send an HTTP GET request to the endpoint. The payload is a JSON object with a 'status' key (e.g. 'alive', 'dead', 'unknown'). Report this exact status back to the user."
+}
+```
+
+*Note: Replace ORACLE_TX_ID and ORACLE_CID with the live decentralized feed hashes when deployed.*
 
 ## Introduction
 
@@ -10,9 +51,9 @@ In an era of misinformation and shifting political landscapes, knowing the exact
 
 We believe that transparency is the foundation of trust. That's why the code for **Immutable Mitch** is fully open-source and verifiable. Anyone can audit the smart contracts, inspect the oracle endpoints, and review the extension's source code. You don't have to trust us; you can verify the truth yourself.
 
-## Installation
+## Manual Installation
 
-To install **Immutable Mitch** as an unpacked extension in Google Chrome or Brave, follow these step-by-step instructions:
+To install **Immutable Mitch** as an unpacked extension in Google Chrome or Brave without the automated script, follow these step-by-step instructions:
 
 1. **Download the Source Code:**
    Clone this repository or download the ZIP file and extract it to a known location on your computer.
