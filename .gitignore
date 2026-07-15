@@ -1,2 +1,6 @@
 .vercel
 node_modules/
+.env*
+*.zip
+wallet.json
+wallet_b64.txt
