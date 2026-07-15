@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const copyBtn = document.getElementById('copy-btn');
   const ethAddress = document.getElementById('eth-address').innerText;
   const copyNotification = document.getElementById('copy-notification');
+  const lastChangeText = document.getElementById('last-change-text');
+  const explorerLink = document.getElementById('explorer-link');
 
   chrome.storage.local.get(['mcconnellStatus'], (result) => {
     const data = result.mcconnellStatus;
@@ -22,11 +24,23 @@ document.addEventListener('DOMContentLoaded', () => {
         statusText.innerText = "UNKNOWN";
         statusText.className = "status unknown";
       }
-      sourceText.innerText = `NODE SYNC: ${new Date(data.timestamp).toLocaleTimeString()}`;
+      
+      // Update with timezone
+      sourceText.innerText = `NODE SYNC: ${new Date(data.timestamp).toLocaleTimeString('en-US', { timeZoneName: 'short' })}`;
+      
+      // Set last change text (assuming data structure might have lastUpdate, else fallback to current timestamp)
+      const changeTime = data.lastUpdate ? new Date(data.lastUpdate) : new Date(data.timestamp);
+      lastChangeText.innerText = `LAST CHANGE: ${changeTime.toLocaleDateString()} ${changeTime.toLocaleTimeString('en-US', { timeZoneName: 'short' })}`;
+      
+      // Update the block explorer link with the smart contract transaction ID if available
+      if (data.contractTxId) {
+        explorerLink.href = `https://viewblock.io/arweave/tx/${data.contractTxId}`;
+      }
     } else {
       statusText.innerText = "OFFLINE";
       statusText.className = "status unknown";
       sourceText.innerText = "Awaiting block verification...";
+      lastChangeText.innerText = "LAST CHANGE: Unknown";
     }
   });
 

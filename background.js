@@ -1,113 +1,53 @@
-// The oracle fetches data from a decentralized source (Arweave/IPFS).
-const STATUS_ORACLE_URL = "https://raw.githubusercontent.com/web3vero/immutable-mitch/main/oracle.json";
+// The oracle fetches data from a decentralized source (Arweave via Warp DRE gateway).
+const STATUS_ORACLE_URL = "https://dre-1.warp.cc/contract/?id=332H4fFgXev5R63Ca9aGotLVqUg3lq_Rjl1SC2KKYcM";
 
-let animationInterval = null;
-let currentFrame = 0;
-
-// Uses OffscreenCanvas to procedurally generate and animate the extension icon!
 function setAnimatedIcon(status) {
-  if (animationInterval) clearInterval(animationInterval);
-  
-  const canvas = new OffscreenCanvas(16, 16);
-  const ctx = canvas.getContext('2d');
-
-  function drawEmoji(emoji, angle, yOffset) {
-    ctx.clearRect(0, 0, 16, 16);
-    ctx.save();
-    ctx.translate(8, 8 + yOffset);
-    ctx.rotate(angle * Math.PI / 180);
-    ctx.font = '14px Arial';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(emoji, 0, 0);
-    ctx.restore();
-    chrome.action.setIcon({ imageData: ctx.getImageData(0, 0, 16, 16) });
-  }
-  
-  function drawTurtle(headOut, angle, yOffset) {
-    ctx.clearRect(0, 0, 16, 16);
-    ctx.save();
-    ctx.translate(8, 8 + yOffset);
-    ctx.rotate(angle * Math.PI / 180);
-    ctx.translate(-8, -8);
-
-    // Legs
-    ctx.fillStyle = '#1b5e20';
-    ctx.fillRect(2, 11, 2, 3);
-    ctx.fillRect(8, 11, 2, 3);
-
-    // Shell
-    ctx.fillStyle = '#4CAF50';
-    ctx.beginPath();
-    ctx.arc(6, 10, 5, Math.PI, 0);
-    ctx.fill();
-    ctx.fillRect(1, 10, 10, 2);
-
-    // Shell pattern
-    ctx.fillStyle = '#2E7D32';
-    ctx.fillRect(4, 6, 4, 3);
-
-    if (headOut) {
-        // Greatly extended neck
-        ctx.fillStyle = '#8BC34A';
-        ctx.fillRect(10, 4, 2, 6);
-
-        // Head 
-        ctx.beginPath();
-        ctx.arc(11, 4, 2.5, 0, Math.PI*2);
-        ctx.fill();
-        
-        // Eye
-        ctx.fillStyle = 'black';
-        ctx.fillRect(12, 3, 1, 1);
-
-        // Red baseball cap
-        ctx.fillStyle = 'red';
-        ctx.beginPath();
-        ctx.arc(11, 2.5, 2.5, Math.PI, 0); // Hat dome
-        ctx.fill();
-        ctx.fillRect(11, 2, 4, 1); // Hat brim
-
-        // Gold dot on the front of the hat
-        ctx.fillStyle = 'gold';
-        ctx.fillRect(12, 1, 1.5, 1);
-    }
-    
-    ctx.restore();
-    chrome.action.setIcon({ imageData: ctx.getImageData(0, 0, 16, 16) });
-  }
-
   if (status.includes("alive") || status.includes("recovering")) {
     chrome.action.setTitle({ title: "Status: Recovering / Alive (Oracle Confirmed)" });
-    // Animate a dancing/bobbing turtle with head OUT!
-    animationInterval = setInterval(() => {
-      const angle = currentFrame % 2 === 0 ? -10 : 10;
-      const yOff = currentFrame % 2 === 0 ? -1 : 1;
-      drawTurtle(true, angle, yOff);
-      currentFrame++;
-    }, 400);
+    chrome.action.setIcon({ path: "icon_alive.png" });
   } else if (status.includes("dead") || status.includes("deceased")) {
     chrome.action.setTitle({ title: "Status: Deceased (Oracle Confirmed)" });
-    // Static skull
-    drawEmoji('💀', 0, 0);
+    chrome.action.setIcon({ path: "icon_dead.png" });
   } else {
     chrome.action.setTitle({ title: "Status: Unknown (Data Pending)" });
-    // Static turtle with head tucked safely INSIDE the shell
-    drawTurtle(false, 0, 0);
+    chrome.action.setIcon({ path: "icon_unknown.png" });
   }
 }
 
 async function checkMcConnellStatus() {
   try {
     const response = await fetch(STATUS_ORACLE_URL);
-    const statusData = await response.json();
-    const status = statusData.status.toLowerCase();
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    const state = data.state;
+    
+    if (!state || !state.status) {
+        throw new Error("Missing status in contract state");
+    }
 
+    const status = state.status.toLowerCase();
     setAnimatedIcon(status);
+    
+    let ts = state.lastUpdatedAt;
+    if (typeof ts === 'number' && ts < 10000000000) {
+       ts = ts * 1000;
+    } else if (!ts) {
+       ts = Date.now();
+    }
+
+    const statusData = {
+        status: status,
+        timestamp: ts,
+        contractTxId: "332H4fFgXev5R63Ca9aGotLVqUg3lq_Rjl1SC2KKYcM"
+    };
+    
     chrome.storage.local.set({ mcconnellStatus: statusData });
   } catch (error) {
     console.error("Oracle fetch failed:", error);
     setAnimatedIcon("unknown");
+    chrome.storage.local.set({ mcconnellStatus: { status: "unknown", timestamp: Date.now() } });
   }
 }
 

@@ -21,6 +21,7 @@
     "arweave": "^1.15.7",
     "axios": "^1.18.1",
     "fast-xml-parser": "^5.10.0",
-    "warp-contracts": "^1.4.45"
+    "warp-contracts": "^1.4.45",
+    "warp-contracts-plugin-deploy": "^1.0.13"
   }
 }

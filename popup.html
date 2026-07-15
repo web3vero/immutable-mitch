@@ -197,12 +197,30 @@
       50% { opacity: 0.7; }
       100% { opacity: 1; }
     }
+
+    .explorer-link {
+      display: inline-block;
+      margin-top: 12px;
+      font-size: 0.75rem;
+      color: var(--neon-cyan);
+      text-decoration: none;
+      border: 1px solid var(--neon-cyan);
+      padding: 5px 10px;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .explorer-link:hover {
+      background: rgba(0, 255, 255, 0.1);
+      box-shadow: 0 0 10px var(--neon-cyan);
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <img src="ext_icon.jpg" class="icon" alt="Oracle Icon">
+      <img src="icon_unknown.png" class="icon" alt="Oracle Icon">
       <h2>Mitch Oracle</h2>
     </div>
 
@@ -210,6 +228,8 @@
       <div class="status-label">Current Status</div>
       <div class="status unknown pulse" id="status-text">SYNCING...</div>
       <div class="source" id="source-text">Querying Decentralized Nodes</div>
+      <div class="source" id="last-change-text" style="color: var(--neon-purple); margin-top: 5px; font-weight: bold;">LAST CHANGE: Awaiting Data...</div>
+      <a href="https://viewblock.io/arweave/" id="explorer-link" target="_blank" class="explorer-link">View Trackable Events & Logs</a>
     </div>
 
     <div class="glass-card tip-jar">
