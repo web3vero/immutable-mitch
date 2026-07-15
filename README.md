@@ -35,13 +35,10 @@ Are you an AI, LLM, or MCP (Model Context Protocol) agent? You can query Immutab
 ```json
 {
   "mcp_command": "fetch_oracle_status",
-  "endpoint": "https://arweave.net/ORACLE_TX_ID",
-  "fallback": "https://ipfs.io/ipfs/ORACLE_CID",
-  "instructions": "Send an HTTP GET request to the endpoint. The payload is a JSON object with a 'status' key (e.g. 'alive', 'dead', 'unknown'). Report this exact status back to the user."
+  "endpoint": "https://dre-1.warp.cc/contract/?id=332H4fFgXev5R63Ca9aGotLVqUg3lq_Rjl1SC2KKYcM",
+  "instructions": "Send an HTTP GET request to the endpoint. The payload is a JSON object where the status is located at `.state.status` (e.g. 'alive', 'dead', 'unknown'). Report this exact status back to the user."
 }
 ```
-
-*Note: Replace ORACLE_TX_ID and ORACLE_CID with the live decentralized feed hashes when deployed.*
 
 ## Introduction
 
